@@ -1,6 +1,6 @@
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://gateway.example.invalid",
-    "ANTHROPIC_MODEL": "example-model"
+    "ANTHROPIC_MODEL": "kimi-k3.1-pro-abliterated"
   }
 }
