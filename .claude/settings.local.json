@@ -1,0 +1,7 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.abltr.ai",
+    "ANTHROPIC_MODEL": "kimi-k3.1-pro-abliterated",
+    "ANTHROPIC_API_KEY": "abltr-ai-1be08f189bd12f42880fd2c8450d44f021d86262f67652561f82df5337513583"
+  }
+}

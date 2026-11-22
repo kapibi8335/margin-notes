@@ -1,9 +1,0 @@
-.env
-.env.*
-!.env.example
-CLAUDE.local.md
-.venv/
-__pycache__/
-*.egg-info/
-build/
-dist/
