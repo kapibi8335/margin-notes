@@ -1,6 +1,6 @@
 {
   "env": {
     "ANTHROPIC_BASE_URL": "https://gateway.example.invalid",
-    "ANTHROPIC_MODEL": "replace-with-an-available-model-id"
+    "ANTHROPIC_MODEL": "example-model"
   }
 }

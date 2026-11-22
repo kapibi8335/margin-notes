@@ -9,6 +9,7 @@ Set `INFERENCE_BASE_URL` and `INFERENCE_API_KEY` in the process environment. The
 ```sh
 python3 -m margin_notes --help
 python3 -m margin_notes models
+python3 -m margin_notes models --ids-only
 python3 -m margin_notes --timeout 5 models
 python3 -m margin_notes chat --model MODEL_ID --max-tokens 64 "Give an example of a haiku."
 python3 -m margin_notes messages --model MODEL_ID --max-tokens 64 "Give an example of a limerick."
