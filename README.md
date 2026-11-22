@@ -9,11 +9,12 @@ Set `INFERENCE_BASE_URL` and `INFERENCE_API_KEY` in the process environment. The
 ```sh
 python3 -m margin_notes --help
 python3 -m margin_notes models
+python3 -m margin_notes --timeout 5 models
 python3 -m margin_notes chat --model MODEL_ID --max-tokens 64 "Give an example of a haiku."
 python3 -m margin_notes messages --model MODEL_ID --max-tokens 64 "Give an example of a limerick."
 ```
 
-Use an exact model ID returned by `models`. Inference commands print API responses as JSON. Install with `python3 -m pip install .` to use the `margin-notes` entry point.
+Use an exact model ID returned by `models`. Inference commands print API responses as JSON. The HTTP socket timeout defaults to 30 seconds. Set `--timeout` before the subcommand to use a different value. Install with `python3 -m pip install .` to use the `margin-notes` entry point.
 
 ## Python
 

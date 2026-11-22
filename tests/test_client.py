@@ -6,6 +6,7 @@ from unittest.mock import patch
 from urllib.error import HTTPError
 
 from margin_notes import InferenceError, Client
+from margin_notes.__main__ import main
 
 MESSAGES = [{"role": "user", "content": "Hello"}]
 
@@ -35,6 +36,18 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(request.get_method(), "GET")
         self.assertTrue(request.full_url.endswith("/v1/models"))
         self.assertEqual(request.get_header("Authorization"), "Bearer mock-token")
+        self.assertEqual(self.open.call_args.kwargs["timeout"], 30.0)
+
+    def test_cli_passes_timeout_to_client(self):
+        with patch("margin_notes.__main__.Client") as client, patch("sys.stdout", new_callable=io.StringIO):
+            client.return_value.list_models.return_value = {"data": []}
+            self.assertEqual(main(["--timeout", "2.5", "models"]), 0)
+            client.assert_called_once_with(timeout=2.5)
+
+    def test_invalid_timeouts(self):
+        for timeout in (0, -1, float("inf"), float("nan")):
+            with self.subTest(timeout=timeout), self.assertRaisesRegex(ValueError, "Request timeout"):
+                Client("mock-token", base_url="https://gateway.example.invalid/v1", timeout=timeout)
 
     def test_chat_completion(self):
         self.open.return_value = io.BytesIO(b'{"choices":[]}')

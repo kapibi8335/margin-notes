@@ -1,10 +1,14 @@
 """Small synchronous client for inference gateways."""
 
 import json
+import math
 import os
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
+
+DEFAULT_TIMEOUT = 30.0
+
 
 class InferenceError(Exception):
     """The API request failed or returned an invalid response."""
@@ -18,7 +22,7 @@ class _NoRedirect(HTTPRedirectHandler):
 class Client:
     """Call model discovery and non-streaming inference endpoints."""
 
-    def __init__(self, api_key=None, *, base_url=None, timeout=30):
+    def __init__(self, api_key=None, *, base_url=None, timeout=DEFAULT_TIMEOUT):
         self._api_key = api_key if api_key is not None else os.getenv("INFERENCE_API_KEY")
         if not self._api_key:
             raise ValueError("Set INFERENCE_API_KEY or pass api_key.")
@@ -30,6 +34,8 @@ class Client:
         if (url.scheme != "https" or not url.hostname or url.username is not None
                 or url.query or url.fragment):
             raise ValueError("INFERENCE_BASE_URL must be an HTTPS URL without credentials, query, or fragment.")
+        if not math.isfinite(timeout) or timeout <= 0:
+            raise ValueError("Request timeout must be a finite positive number of seconds.")
         self.timeout = timeout
         self._opener = build_opener(_NoRedirect())
 
