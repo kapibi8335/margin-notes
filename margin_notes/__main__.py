@@ -14,7 +14,8 @@ def main(argv=None):
         help="HTTP socket timeout in seconds (default: %(default)s)",
     )
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("models", help="List available models as JSON")
+    models = commands.add_parser("models", help="List available models as JSON")
+    models.add_argument("--ids-only", action="store_true", help="Print a JSON array of model IDs")
     for name, protocol in (("chat", "OpenAI Chat Completions"), ("messages", "Anthropic Messages")):
         command = commands.add_parser(name, help=f"Send one {protocol} request")
         command.add_argument("--model", required=True, help="Exact model ID from the model list")
@@ -28,6 +29,14 @@ def main(argv=None):
         client = Client(timeout=args.timeout)
         if args.command == "models":
             result = client.list_models()
+            if args.ids_only:
+                entries = result.get("data")
+                if not isinstance(entries, list) or any(
+                    not isinstance(entry, dict) or not isinstance(entry.get("id"), str)
+                    for entry in entries
+                ):
+                    raise InferenceError("Model listing must contain a data array with string IDs.")
+                result = [entry["id"] for entry in entries]
         else:
             send = client.chat if args.command == "chat" else client.messages
             result = send(args.model, [{"role": "user", "content": args.prompt}], max_tokens=args.max_tokens)

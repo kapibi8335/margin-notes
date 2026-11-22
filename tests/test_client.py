@@ -49,6 +49,18 @@ class ClientTest(unittest.TestCase):
             with self.subTest(timeout=timeout), self.assertRaisesRegex(ValueError, "Request timeout"):
                 Client("mock-token", base_url="https://gateway.example.invalid/v1", timeout=timeout)
 
+    def test_model_ids_only(self):
+        with patch("margin_notes.__main__.Client") as client, patch("sys.stdout", new_callable=io.StringIO) as stdout:
+            client.return_value.list_models.return_value = {"data": [{"id": "demo-model", "owned_by": "example"}]}
+            self.assertEqual(main(["models", "--ids-only"]), 0)
+            self.assertEqual(json.loads(stdout.getvalue()), ["demo-model"])
+
+    def test_model_ids_only_rejects_invalid_listing(self):
+        with patch("margin_notes.__main__.Client") as client, patch("sys.stderr", new_callable=io.StringIO) as stderr:
+            client.return_value.list_models.return_value = {"data": [{"id": None}]}
+            self.assertEqual(main(["models", "--ids-only"]), 1)
+            self.assertIn("data array with string IDs", stderr.getvalue())
+
     def test_chat_completion(self):
         self.open.return_value = io.BytesIO(b'{"choices":[]}')
         self.client.chat("demo-model", MESSAGES, max_tokens=12)
