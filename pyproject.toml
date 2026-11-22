@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "margin-notes"
+version = "0.1.0"
+description = "Python client and CLI for testing inference gateways"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+margin-notes = "margin_notes.__main__:main"
+
+[tool.setuptools]
+packages = ["margin_notes"]

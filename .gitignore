@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+CLAUDE.local.md
+.venv/
+__pycache__/
+*.egg-info/
+build/
+dist/
